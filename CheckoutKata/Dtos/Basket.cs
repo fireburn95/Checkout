@@ -3,8 +3,9 @@ using CheckoutKata.Models;
 
 namespace CheckoutKata.Dtos
 {
-    public class Basket : Dictionary<Product, int>
+    public class CheckoutItem
     {
-        
+        public Product Product { get; set; }
+        public int Quantity { get; set; }
     }
 }

@@ -1,16 +1,17 @@
+using System.Collections.Generic;
 using CheckoutKata.Dtos;
 
 namespace CheckoutKata.Models
 {
     public class CheckoutService : ICheckoutService
     {
-        private readonly Basket _basket;
+        private readonly List<CheckoutItem> _basket;
         public CheckoutService()
         {
-            _basket = new Basket();
+            _basket = new List<CheckoutItem>();
         }
 
-        public Basket GetCurrentBasket()
+        public List<CheckoutItem> GetCurrentBasket()
         {
             throw new System.NotImplementedException();
         }
