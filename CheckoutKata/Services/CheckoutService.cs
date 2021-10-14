@@ -1,7 +1,15 @@
+using CheckoutKata.Dtos;
+
 namespace CheckoutKata.Models
 {
     public class CheckoutService : ICheckoutService
     {
+        private Basket _basket;
+        public CheckoutService()
+        {
+            _basket = new Basket();
+        }
+        
         public void AddProduct(Product product)
         {
             throw new System.NotImplementedException();
