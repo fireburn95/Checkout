@@ -4,10 +4,15 @@ namespace CheckoutKata.Models
 {
     public class CheckoutService : ICheckoutService
     {
-        private Basket _basket;
+        private readonly Basket _basket;
         public CheckoutService()
         {
             _basket = new Basket();
+        }
+
+        public Basket GetCurrentBasket()
+        {
+            throw new System.NotImplementedException();
         }
         
         public void AddProduct(Product product)
