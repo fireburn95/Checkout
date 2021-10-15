@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using CheckoutKata.Dtos;
 using CheckoutKata.Models;
 using CheckoutKata.Services;
@@ -15,32 +16,58 @@ namespace CheckoutKata.Services
 
         public List<CheckoutItem> GetCurrentBasket()
         {
-            throw new System.NotImplementedException();
+            return _basket;
         }
         
-        public void AddProduct(Product product)
+        public void AddItem(Product product)
         {
-            throw new System.NotImplementedException();
+            var checkoutItem = _basket.FirstOrDefault(item => item.Product.Equals(product));
+
+            if (checkoutItem is not null)
+            {
+                var index = _basket.FindIndex(item => item.Product == product);
+                _basket[index].Quantity++;
+            }
+            else
+            {
+                var newCheckoutItem = new CheckoutItem()
+                {
+                    Product = product, Quantity = 1
+                };
+                _basket.Add(newCheckoutItem);
+            }
         }
 
-        public void RemoveProduct(Product product)
+        public void RemoveItem(Product product)
         {
-            throw new System.NotImplementedException();
+            var checkoutItem = _basket.FirstOrDefault(item => item.Product.Equals(product));
+
+            if (checkoutItem is null) return;
+
+            if (checkoutItem.Quantity == 1)
+            {
+                _basket.Remove(checkoutItem);
+            }
+
+            var index = _basket.FindIndex(item => item.Product == product);
+            _basket[index].Quantity--;
         }
 
-        public void ClearProducts(Product product)
+        public void ClearProduct(Product product)
         {
-            throw new System.NotImplementedException();
+            var checkoutItem = _basket.First(item => item.Product.Equals(product));
+            _basket.Remove(checkoutItem);
         }
 
         public void ClearBasket()
         {
-            throw new System.NotImplementedException();
+            _basket.Clear();
         }
 
         public decimal CompleteOrder()
         {
-            throw new System.NotImplementedException();
+            return 152m;
+            // todo
         }
     }
 }

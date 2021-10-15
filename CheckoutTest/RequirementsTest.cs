@@ -21,7 +21,7 @@ namespace CheckoutTest
             var productA = new Product { Id = Guid.NewGuid(), Name = "A", Price = 10.0m };
             
             // When
-            _checkoutService.AddProduct(productA);
+            _checkoutService.AddItem(productA);
 
             // Then
             var basket = _checkoutService.GetCurrentBasket();
@@ -43,10 +43,10 @@ namespace CheckoutTest
             var productB = new Product{ Id = Guid.NewGuid(), Name = "B", Price = 15.0m };
 
             // Add to checkout
-            _checkoutService.AddProduct(productA);
-            _checkoutService.AddProduct(productA);
-            _checkoutService.AddProduct(productB);
-            _checkoutService.AddProduct(productB);
+            _checkoutService.AddItem(productA);
+            _checkoutService.AddItem(productA);
+            _checkoutService.AddItem(productB);
+            _checkoutService.AddItem(productB);
             
             // When
             var totalPrice = _checkoutService.CompleteOrder();
@@ -65,14 +65,14 @@ namespace CheckoutTest
             var buy3ProdBFor40 = new BuyQuantityForPrice();
 
             // Add 8 units to checkout
-            _checkoutService.AddProduct(productB);
-            _checkoutService.AddProduct(productB);
-            _checkoutService.AddProduct(productB);
-            _checkoutService.AddProduct(productB);
-            _checkoutService.AddProduct(productB);
-            _checkoutService.AddProduct(productB);
-            _checkoutService.AddProduct(productB);
-            _checkoutService.AddProduct(productB);
+            _checkoutService.AddItem(productB);
+            _checkoutService.AddItem(productB);
+            _checkoutService.AddItem(productB);
+            _checkoutService.AddItem(productB);
+            _checkoutService.AddItem(productB);
+            _checkoutService.AddItem(productB);
+            _checkoutService.AddItem(productB);
+            _checkoutService.AddItem(productB);
             
             // When
             var totalPrice = _checkoutService.CompleteOrder();
@@ -91,11 +91,11 @@ namespace CheckoutTest
             var buy2ProdDGet25Off = new BuyQuantityGetPercentOff();
 
             // Add 5 units to checkout
-            _checkoutService.AddProduct(productD);
-            _checkoutService.AddProduct(productD);
-            _checkoutService.AddProduct(productD);
-            _checkoutService.AddProduct(productD);
-            _checkoutService.AddProduct(productD);
+            _checkoutService.AddItem(productD);
+            _checkoutService.AddItem(productD);
+            _checkoutService.AddItem(productD);
+            _checkoutService.AddItem(productD);
+            _checkoutService.AddItem(productD);
             
             // When
             var totalPrice = _checkoutService.CompleteOrder();

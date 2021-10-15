@@ -24,7 +24,7 @@ namespace CheckoutTest
             var product = new Product { Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
             
             // When
-            _checkoutService.AddProduct(product);
+            _checkoutService.AddItem(product);
 
             // Then
             var basket = _checkoutService.GetCurrentBasket();
@@ -36,12 +36,12 @@ namespace CheckoutTest
         {
             // Given
             var product = new Product { Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
-            _checkoutService.AddProduct(product);
+            _checkoutService.AddItem(product);
             var basket = _checkoutService.GetCurrentBasket();
             AssertSingleProductInBasket(product, basket);
             
             // When
-            _checkoutService.RemoveProduct(product);
+            _checkoutService.RemoveItem(product);
             
             // Then
             // Basket is empty
@@ -56,11 +56,11 @@ namespace CheckoutTest
             var product2 = new Product{ Id = Guid.NewGuid(), Name = "Chocolate", Price = 33.0m };
             
             // 3 x Product 1, 2 x Product 2
-            _checkoutService.AddProduct(product1);
-            _checkoutService.AddProduct(product1);
-            _checkoutService.AddProduct(product1);
-            _checkoutService.AddProduct(product2);
-            _checkoutService.AddProduct(product2);
+            _checkoutService.AddItem(product1);
+            _checkoutService.AddItem(product1);
+            _checkoutService.AddItem(product1);
+            _checkoutService.AddItem(product2);
+            _checkoutService.AddItem(product2);
 
             var totalQuantityBefore = _checkoutService.GetCurrentBasket().Select(item => item.Quantity).Sum();
             var product1QuantityBefore = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product1)).ToList()[0].Quantity;
@@ -70,7 +70,7 @@ namespace CheckoutTest
             Assert.Equal(2, product2QuantityBefore);
             
             // When
-            _checkoutService.ClearProducts(product1);
+            _checkoutService.ClearProduct(product1);
             
             // Then
             var totalQuantityAfter = _checkoutService.GetCurrentBasket().Select(item => item.Quantity).Sum();
@@ -89,9 +89,9 @@ namespace CheckoutTest
             var product2 = new Product{ Id = Guid.NewGuid(), Name = "Chocolate", Price = 33.0m };
             
             // 1 x Product 1, 2 x Product 2
-            _checkoutService.AddProduct(product1);
-            _checkoutService.AddProduct(product2);
-            _checkoutService.AddProduct(product2);
+            _checkoutService.AddItem(product1);
+            _checkoutService.AddItem(product2);
+            _checkoutService.AddItem(product2);
             
             var totalQuantityBefore = _checkoutService.GetCurrentBasket().Select(item => item.Quantity).Sum();
             var product1QuantityBefore = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product1)).ToList()[0].Quantity;
@@ -120,12 +120,12 @@ namespace CheckoutTest
             var buy2Prod2For55 = new BuyQuantityForPrice();
 
             // Add to checkout
-            _checkoutService.AddProduct(product1);
-            _checkoutService.AddProduct(product1);
-            _checkoutService.AddProduct(product2);
-            _checkoutService.AddProduct(product2);
-            _checkoutService.AddProduct(product3);
-            _checkoutService.AddProduct(product3);
+            _checkoutService.AddItem(product1);
+            _checkoutService.AddItem(product1);
+            _checkoutService.AddItem(product2);
+            _checkoutService.AddItem(product2);
+            _checkoutService.AddItem(product3);
+            _checkoutService.AddItem(product3);
             
             // When
             var totalPrice = _checkoutService.CompleteOrder();
