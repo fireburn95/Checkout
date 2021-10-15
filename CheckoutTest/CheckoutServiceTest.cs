@@ -19,7 +19,7 @@ namespace CheckoutTest
         public void TestAddProduct()
         {
             // Given
-            var product = new Product();
+            var product = new Product { Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
             
             // When
             _checkoutService.AddProduct(product);
@@ -33,7 +33,7 @@ namespace CheckoutTest
         public void TestRemoveProduct()
         {
             // Given
-            var product = new Product();
+            var product = new Product { Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
             _checkoutService.AddProduct(product);
             var basket = _checkoutService.GetCurrentBasket();
             AssertSingleProductInBasket(product, basket);
@@ -50,8 +50,8 @@ namespace CheckoutTest
         public void TestClearProducts()
         {
             // Given
-            var product1 = new Product();
-            var product2 = new Product();
+            var product1 = new Product{ Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
+            var product2 = new Product{ Id = Guid.NewGuid(), Name = "Chocolate", Price = 33.0m };
             
             // 3 x Product 1, 2 x Product 2
             _checkoutService.AddProduct(product1);
@@ -83,8 +83,8 @@ namespace CheckoutTest
         public void TestClearBaskets()
         {
             // Given
-            var product1 = new Product();
-            var product2 = new Product();
+            var product1 = new Product{ Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
+            var product2 = new Product{ Id = Guid.NewGuid(), Name = "Chocolate", Price = 33.0m };
             
             // 1 x Product 1, 2 x Product 2
             _checkoutService.AddProduct(product1);
@@ -108,13 +108,28 @@ namespace CheckoutTest
         [Fact]
         public void TestCompleteOrder()
         {
-            // Create three Products
-            
-            // Create two Promotions
-            
+            // Given
+            var product1 = new Product{ Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
+            var product2 = new Product{ Id = Guid.NewGuid(), Name = "Chocolate", Price = 33.0m };
+            var product3 = new Product{ Id = Guid.NewGuid(), Name = "Chips", Price = 18.5m };
+
+            // todo Create two Promotions
+            // todo product1 is buy 2 get 25% off
+            // todo product2 is buy 2 for 55.0
+
             // Add to checkout
+            _checkoutService.AddProduct(product1);
+            _checkoutService.AddProduct(product1);
+            _checkoutService.AddProduct(product2);
+            _checkoutService.AddProduct(product2);
+            _checkoutService.AddProduct(product3);
+            _checkoutService.AddProduct(product3);
             
-            // Calculate total
+            // When
+            var totalPrice = _checkoutService.CompleteOrder();
+
+            // Calculate total (60 + 55 + 37)
+            Assert.Equal(152m, totalPrice);
         }
 
         private static void AssertSingleProductInBasket(Product product, List<CheckoutItem> basket)

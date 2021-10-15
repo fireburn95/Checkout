@@ -36,7 +36,7 @@ namespace CheckoutKata.Models
             throw new System.NotImplementedException();
         }
 
-        public int CompleteOrder()
+        public decimal CompleteOrder()
         {
             throw new System.NotImplementedException();
         }

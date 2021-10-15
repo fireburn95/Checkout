@@ -10,6 +10,6 @@ namespace CheckoutKata.Models
 
         public void ClearBasket();
 
-        public int CompleteOrder();
+        public decimal CompleteOrder();
     }
 }
