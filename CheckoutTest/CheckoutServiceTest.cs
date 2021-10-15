@@ -113,9 +113,9 @@ namespace CheckoutTest
             var product2 = new Product{ Id = Guid.NewGuid(), Name = "Chocolate", Price = 33.0m };
             var product3 = new Product{ Id = Guid.NewGuid(), Name = "Chips", Price = 18.5m };
 
-            // todo Create two Promotions
-            // todo product1 is buy 2 get 25% off
-            // todo product2 is buy 2 for 55.0
+            // Create two Promotions todo persist
+            var buy2Prod1Get25Off = new BuyQuantityGetPercentOff();
+            var buy2Prod2For55 = new BuyQuantityForPrice();
 
             // Add to checkout
             _checkoutService.AddProduct(product1);
