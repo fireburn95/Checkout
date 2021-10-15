@@ -19,7 +19,7 @@ namespace CheckoutTest
         public void TestOne()
         {
             // Given
-            var productA = new Product { Id = Guid.NewGuid(), Name = "A", Price = 10.0m };
+            var productA = new Product { Sku = "A", Price = 10.0m };
             
             // When
             _checkoutService.AddItem(productA);
@@ -40,8 +40,8 @@ namespace CheckoutTest
         public void TestTwo()
         {
             // Given
-            var productA = new Product{ Id = Guid.NewGuid(), Name = "A", Price = 10.0m };
-            var productB = new Product{ Id = Guid.NewGuid(), Name = "B", Price = 15.0m };
+            var productA = new Product{ Sku = "A", Price = 10.0m };
+            var productB = new Product{ Sku = "B", Price = 15.0m };
 
             // Add to checkout
             _checkoutService.AddItem(productA);
@@ -60,7 +60,7 @@ namespace CheckoutTest
         public void TestThree()
         {
             // Given
-            var productB = new Product{ Id = Guid.NewGuid(), Name = "B", Price = 15.0m };
+            var productB = new Product{ Sku = "B", Price = 15.0m };
             
             // Create two Promotions
             var buy3ProdBFor40 = new BuyQuantityForPrice() { Product = productB, PurchaseQuantity = 3, NewPrice = 40};
@@ -86,7 +86,7 @@ namespace CheckoutTest
         public void TestFour()
         {
             // Given
-            var productD = new Product{ Id = Guid.NewGuid(), Name = "D", Price = 55.0m };
+            var productD = new Product{ Sku = "D", Price = 55.0m };
             
             // Create two Promotions
             var buy2ProdDGet25Off = new BuyQuantityGetPercentOff() { Product = productD, PurchaseQuantity = 2, PercentDiscount = 25f};

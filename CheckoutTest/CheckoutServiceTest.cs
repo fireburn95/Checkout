@@ -21,7 +21,7 @@ namespace CheckoutTest
         public void TestAddProduct()
         {
             // Given
-            var product = new Product { Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
+            var product = new Product { Sku = "Cheese", Price = 40.0m };
             
             // When
             _checkoutService.AddItem(product);
@@ -35,7 +35,7 @@ namespace CheckoutTest
         public void TestRemoveProductCompletely()
         {
             // Given
-            var product = new Product { Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
+            var product = new Product { Sku = "Cheese", Price = 40.0m };
             _checkoutService.AddItem(product);
             var basket = _checkoutService.GetCurrentBasket();
             AssertSingleProductInBasket(product, basket);
@@ -52,7 +52,7 @@ namespace CheckoutTest
         public void TestRemoveProductQuantity()
         {
             // Given
-            var product = new Product { Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
+            var product = new Product { Sku = "Cheese", Price = 40.0m };
             _checkoutService.AddItem(product);
             _checkoutService.AddItem(product);
             var basket = _checkoutService.GetCurrentBasket();
@@ -73,8 +73,8 @@ namespace CheckoutTest
         public void TestClearProducts()
         {
             // Given
-            var product1 = new Product{ Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
-            var product2 = new Product{ Id = Guid.NewGuid(), Name = "Chocolate", Price = 33.0m };
+            var product1 = new Product{ Sku = "Cheese", Price = 40.0m };
+            var product2 = new Product{ Sku = "Chocolate", Price = 33.0m };
             
             // 3 x Product 1, 2 x Product 2
             _checkoutService.AddItem(product1);
@@ -106,8 +106,8 @@ namespace CheckoutTest
         public void TestClearBaskets()
         {
             // Given
-            var product1 = new Product{ Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
-            var product2 = new Product{ Id = Guid.NewGuid(), Name = "Chocolate", Price = 33.0m };
+            var product1 = new Product{ Sku = "Cheese", Price = 40.0m };
+            var product2 = new Product{ Sku = "Chocolate", Price = 33.0m };
             
             // 1 x Product 1, 2 x Product 2
             _checkoutService.AddItem(product1);
@@ -132,9 +132,9 @@ namespace CheckoutTest
         public void TestCompleteOrder()
         {
             // Given
-            var product1 = new Product{ Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
-            var product2 = new Product{ Id = Guid.NewGuid(), Name = "Chocolate", Price = 33.0m };
-            var product3 = new Product{ Id = Guid.NewGuid(), Name = "Chips", Price = 18.5m };
+            var product1 = new Product{ Sku = "Cheese", Price = 40.0m };
+            var product2 = new Product{ Sku = "Chocolate", Price = 33.0m };
+            var product3 = new Product{ Sku = "Chips", Price = 18.5m };
 
             // Create two Promotions
             var buy2Prod1Get25Off = new BuyQuantityGetPercentOff() { Product = product1, PercentDiscount = 25.0f, PurchaseQuantity = 2 };
