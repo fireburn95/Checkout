@@ -48,6 +48,8 @@ namespace CheckoutTest
             Assert.Empty(_checkoutService.GetCurrentBasket());
         }
         
+        // todo test for remove product completely and quantity
+        
         [Fact]
         public void TestClearProducts()
         {
@@ -74,10 +76,10 @@ namespace CheckoutTest
             
             // Then
             var totalQuantityAfter = _checkoutService.GetCurrentBasket().Select(item => item.Quantity).Sum();
-            var product1QuantityAfter = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product1)).ToList()[0].Quantity;
+            var product1After = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product1)).ToList();
             var product2QuantityAfter = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product2)).ToList()[0].Quantity;
             Assert.Equal(2, totalQuantityAfter);
-            Assert.Equal(0, product1QuantityAfter);
+            Assert.Empty(product1After);
             Assert.Equal(2, product2QuantityAfter);
         }
         
@@ -115,9 +117,10 @@ namespace CheckoutTest
             var product2 = new Product{ Id = Guid.NewGuid(), Name = "Chocolate", Price = 33.0m };
             var product3 = new Product{ Id = Guid.NewGuid(), Name = "Chips", Price = 18.5m };
 
-            // Create two Promotions todo persist
-            var buy2Prod1Get25Off = new BuyQuantityGetPercentOff();
-            var buy2Prod2For55 = new BuyQuantityForPrice();
+            // Create two Promotions
+            var buy2Prod1Get25Off = new BuyQuantityGetPercentOff() { Product = product1, PercentDiscount = 25.0f, PurchaseQuantity = 2 };
+            var buy2Prod2For55 = new BuyQuantityForPrice() { Product = product2, NewPrice = 55, PurchaseQuantity = 2 };
+            var promotions = new List<AbstractPromotion>() { buy2Prod1Get25Off, buy2Prod2For55 };
 
             // Add to checkout
             _checkoutService.AddItem(product1);
@@ -128,7 +131,7 @@ namespace CheckoutTest
             _checkoutService.AddItem(product3);
             
             // When
-            var totalPrice = _checkoutService.CompleteOrder();
+            var totalPrice = _checkoutService.CompleteOrder(promotions);
 
             // Calculate total (60 + 55 + 37)
             Assert.Equal(152m, totalPrice);

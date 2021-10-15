@@ -16,6 +16,6 @@ namespace CheckoutKata.Services
 
         public void ClearBasket();
 
-        public decimal CompleteOrder();
+        public decimal CompleteOrder(List<AbstractPromotion> promotions);
     }
 }

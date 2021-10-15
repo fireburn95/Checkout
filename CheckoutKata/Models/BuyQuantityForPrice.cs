@@ -2,6 +2,6 @@ namespace CheckoutKata.Models
 {
     public class BuyQuantityForPrice : AbstractPromotion
     {
-        private decimal NewPrice { get; set; }
+        public decimal NewPrice { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CheckoutKata.Dtos;
@@ -9,6 +10,7 @@ namespace CheckoutKata.Services
     public class CheckoutService : ICheckoutService
     {
         private readonly List<CheckoutItem> _basket;
+        
         public CheckoutService()
         {
             _basket = new List<CheckoutItem>();
@@ -42,11 +44,13 @@ namespace CheckoutKata.Services
         {
             var checkoutItem = _basket.FirstOrDefault(item => item.Product.Equals(product));
 
-            if (checkoutItem is null) return;
+            if (checkoutItem is null) 
+                return;
 
             if (checkoutItem.Quantity == 1)
             {
                 _basket.Remove(checkoutItem);
+                return;
             }
 
             var index = _basket.FindIndex(item => item.Product == product);
@@ -66,8 +70,64 @@ namespace CheckoutKata.Services
 
         public decimal CompleteOrder()
         {
-            return 152m;
-            // todo
+            throw new NotImplementedException();
+        }
+
+        public decimal CompleteOrder(List<AbstractPromotion> promotions)
+        {
+            var totalPrice = 0m;
+
+            // Apply each promotion
+            _basket.ForEach(item =>
+            {
+                // Look for a relevant promotion
+                var relevantPromotions = promotions.Where(promotion => promotion.Product == item.Product).ToList();
+
+                // If there are more than one promotions for a product, error
+                if (relevantPromotions.Count > 1) 
+                    throw new NotSupportedException();
+
+                var applyPromotion = relevantPromotions.FirstOrDefault();
+
+                decimal checkoutItemTotal;
+                int quantityInBasket, quantityOfPromotion, numberOfTimesApplied;
+                decimal promotionTotal, nonDiscountedItemsTotal;
+                switch (applyPromotion)
+                {
+                    case BuyQuantityForPrice promo:
+                        quantityInBasket = item.Quantity;
+                        quantityOfPromotion = promo.PurchaseQuantity;
+
+                        numberOfTimesApplied = quantityInBasket / quantityOfPromotion;
+                        promotionTotal = numberOfTimesApplied * promo.NewPrice;
+
+                        nonDiscountedItemsTotal = (quantityInBasket % quantityOfPromotion) * item.Product.Price;
+
+                        checkoutItemTotal = promotionTotal + nonDiscountedItemsTotal;
+                        break;
+                    case BuyQuantityGetPercentOff promo:
+                        quantityInBasket = item.Quantity;
+                        quantityOfPromotion = promo.PurchaseQuantity;
+                        
+                        numberOfTimesApplied = quantityInBasket / quantityOfPromotion;
+                        var actualPriceOfGroup = (promo.PurchaseQuantity * item.Product.Price) *
+                                                     ((100 - (decimal) promo.PercentDiscount) / 100);
+                        promotionTotal = numberOfTimesApplied * actualPriceOfGroup;
+                        
+                        nonDiscountedItemsTotal = (quantityInBasket % quantityOfPromotion) * item.Product.Price;
+                        
+                        checkoutItemTotal = promotionTotal + nonDiscountedItemsTotal;
+                        break;
+                    default:
+                        // No promotion on this item, or unhandled promotion type in which case ignore
+                        quantityInBasket = item.Quantity;
+                        checkoutItemTotal = quantityInBasket * item.Product.Price;
+                        break;
+                }
+
+                totalPrice += checkoutItemTotal;
+            });
+            return totalPrice;
         }
     }
 }
