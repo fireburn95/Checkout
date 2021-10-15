@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using CheckoutKata.Dtos;
+using CheckoutKata.Models;
+using CheckoutKata.Services;
 
-namespace CheckoutKata.Models
+namespace CheckoutKata.Services
 {
     public class CheckoutService : ICheckoutService
     {

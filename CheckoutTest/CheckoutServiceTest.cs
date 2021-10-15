@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using CheckoutKata.Dtos;
 using CheckoutKata.Models;
+using CheckoutKata.Services;
 using Xunit;
 
 namespace CheckoutTest
 {
     public class CheckoutServiceTest
     {
-        private CheckoutService _checkoutService;
+        private readonly ICheckoutService _checkoutService;
 
         public CheckoutServiceTest()
         {
             _checkoutService = new CheckoutService();
         }
+        
         [Fact]
         public void TestAddProduct()
         {
@@ -132,13 +134,16 @@ namespace CheckoutTest
             Assert.Equal(152m, totalPrice);
         }
 
-        private static void AssertSingleProductInBasket(Product product, List<CheckoutItem> basket)
+        private static void AssertSingleProductInBasket(Product product, IReadOnlyList<CheckoutItem> basket)
         {
-            // Basket has one item
+            // Basket has one product
             Assert.Single(basket);
             
             // The item is the product
             Assert.Equal(product, basket[0].Product);
+            
+            // There is just one item
+            Assert.Equal(1, basket[0].Quantity);
         }
     }
 }
