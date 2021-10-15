@@ -97,38 +97,28 @@ namespace CheckoutKata.Services
                 var applyPromotion = relevantPromotions.FirstOrDefault();
 
                 decimal checkoutItemTotal;
-                int quantityInBasket, quantityOfPromotion, numberOfTimesApplied;
                 decimal promotionTotal, nonDiscountedItemsTotal;
                 switch (applyPromotion)
                 {
                     case BuyQuantityForPrice promo:
-                        quantityInBasket = item.Quantity;
-                        quantityOfPromotion = promo.PurchaseQuantity;
+                        promotionTotal = (int)(item.Quantity / promo.PurchaseQuantity) * promo.NewPrice;
 
-                        numberOfTimesApplied = quantityInBasket / quantityOfPromotion;
-                        promotionTotal = numberOfTimesApplied * promo.NewPrice;
-
-                        nonDiscountedItemsTotal = (quantityInBasket % quantityOfPromotion) * product.Price;
+                        nonDiscountedItemsTotal = (item.Quantity % promo.PurchaseQuantity) * product.Price;
 
                         checkoutItemTotal = promotionTotal + nonDiscountedItemsTotal;
                         break;
                     case BuyQuantityGetPercentOff promo:
-                        quantityInBasket = item.Quantity;
-                        quantityOfPromotion = promo.PurchaseQuantity;
-                        
-                        numberOfTimesApplied = quantityInBasket / quantityOfPromotion;
                         var actualPriceOfGroup = (promo.PurchaseQuantity * product.Price) *
-                                                     ((100 - (decimal) promo.PercentDiscount) / 100);
-                        promotionTotal = numberOfTimesApplied * actualPriceOfGroup;
+                                                 ((100 - (decimal) promo.PercentDiscount) / 100);
+                        promotionTotal = (int)(item.Quantity / promo.PurchaseQuantity) * actualPriceOfGroup;
                         
-                        nonDiscountedItemsTotal = (quantityInBasket % quantityOfPromotion) * product.Price;
+                        nonDiscountedItemsTotal = (item.Quantity % promo.PurchaseQuantity) * product.Price;
                         
                         checkoutItemTotal = promotionTotal + nonDiscountedItemsTotal;
                         break;
                     default:
                         // No promotion on this item, or unhandled promotion type in which case ignore
-                        quantityInBasket = item.Quantity;
-                        checkoutItemTotal = quantityInBasket * product.Price;
+                        checkoutItemTotal = item.Quantity * product.Price;
                         break;
                 }
 
