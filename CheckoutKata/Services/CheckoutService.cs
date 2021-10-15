@@ -9,14 +9,14 @@ namespace CheckoutKata.Services
     public class CheckoutService : ICheckoutService
     {
         private readonly List<CheckoutItem> _basket;
-        private readonly List<Product> products;
+        private readonly List<Product> _products;
         
         public CheckoutService()
         {
             
             _basket = new List<CheckoutItem>();
 
-            products = new List<Product>()
+            _products = new List<Product>()
             {
                 new() {Sku = "A", Price = 10.0m},
                 new() {Sku = "B", Price = 15.0m},
@@ -85,7 +85,7 @@ namespace CheckoutKata.Services
             _basket.ForEach(item =>
             {
                 // Get the product from the store
-                var product = products.First(product => product.Sku == item.Sku);
+                var product = _products.First(product => product.Sku == item.Sku);
                 
                 // Look for a relevant promotion
                 var relevantPromotions = promotions.Where(promotion => promotion.ProductSku == item.Sku).ToList();
