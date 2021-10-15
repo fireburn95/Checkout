@@ -3,17 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using CheckoutKata.Dtos;
 using CheckoutKata.Models;
-using CheckoutKata.Services;
 
 namespace CheckoutKata.Services
 {
     public class CheckoutService : ICheckoutService
     {
         private readonly List<CheckoutItem> _basket;
+        private readonly List<Product> products;
         
         public CheckoutService()
         {
+            
             _basket = new List<CheckoutItem>();
+
+            products = new List<Product>()
+            {
+                new() {Sku = "A", Price = 10.0m},
+                new() {Sku = "B", Price = 15.0m},
+                new() {Sku = "C", Price = 40.0m},
+                new() {Sku = "D", Price = 55.0m},
+            };
         }
 
         public List<CheckoutItem> GetCurrentBasket()
@@ -21,28 +30,28 @@ namespace CheckoutKata.Services
             return _basket;
         }
         
-        public void AddItem(Product product)
+        public void AddItem(string sku)
         {
-            var checkoutItem = _basket.FirstOrDefault(item => item.Product.Equals(product));
+            var checkoutItem = _basket.FirstOrDefault(item => item.Sku.Equals(sku));
 
             if (checkoutItem is not null)
             {
-                var index = _basket.FindIndex(item => item.Product == product);
+                var index = _basket.FindIndex(item => item.Sku.Equals(sku));
                 _basket[index].Quantity++;
             }
             else
             {
                 var newCheckoutItem = new CheckoutItem()
                 {
-                    Product = product, Quantity = 1
+                    Sku = sku, Quantity = 1
                 };
                 _basket.Add(newCheckoutItem);
             }
         }
 
-        public void RemoveItem(Product product)
+        public void RemoveItem(string sku)
         {
-            var checkoutItem = _basket.FirstOrDefault(item => item.Product.Equals(product));
+            var checkoutItem = _basket.FirstOrDefault(item => item.Sku.Equals(sku));
 
             if (checkoutItem is null) 
                 return;
@@ -53,13 +62,13 @@ namespace CheckoutKata.Services
                 return;
             }
 
-            var index = _basket.FindIndex(item => item.Product == product);
+            var index = _basket.FindIndex(item => item.Sku.Equals(sku));
             _basket[index].Quantity--;
         }
 
-        public void ClearProduct(Product product)
+        public void ClearProduct(string sku)
         {
-            var checkoutItem = _basket.First(item => item.Product.Equals(product));
+            var checkoutItem = _basket.First(item => item.Sku.Equals(sku));
             _basket.Remove(checkoutItem);
         }
 
@@ -68,20 +77,18 @@ namespace CheckoutKata.Services
             _basket.Clear();
         }
 
-        public decimal CompleteOrder()
-        {
-            throw new NotImplementedException();
-        }
-
         public decimal CompleteOrder(List<AbstractPromotion> promotions)
         {
             var totalPrice = 0m;
 
-            // Apply each promotion
+            // For each item in basket
             _basket.ForEach(item =>
             {
+                // Get the product from the store
+                var product = products.First(product => product.Sku == item.Sku);
+                
                 // Look for a relevant promotion
-                var relevantPromotions = promotions.Where(promotion => promotion.Product == item.Product).ToList();
+                var relevantPromotions = promotions.Where(promotion => promotion.ProductSku == item.Sku).ToList();
 
                 // If there are more than one promotions for a product, error
                 if (relevantPromotions.Count > 1) 
@@ -101,7 +108,7 @@ namespace CheckoutKata.Services
                         numberOfTimesApplied = quantityInBasket / quantityOfPromotion;
                         promotionTotal = numberOfTimesApplied * promo.NewPrice;
 
-                        nonDiscountedItemsTotal = (quantityInBasket % quantityOfPromotion) * item.Product.Price;
+                        nonDiscountedItemsTotal = (quantityInBasket % quantityOfPromotion) * product.Price;
 
                         checkoutItemTotal = promotionTotal + nonDiscountedItemsTotal;
                         break;
@@ -110,18 +117,18 @@ namespace CheckoutKata.Services
                         quantityOfPromotion = promo.PurchaseQuantity;
                         
                         numberOfTimesApplied = quantityInBasket / quantityOfPromotion;
-                        var actualPriceOfGroup = (promo.PurchaseQuantity * item.Product.Price) *
+                        var actualPriceOfGroup = (promo.PurchaseQuantity * product.Price) *
                                                      ((100 - (decimal) promo.PercentDiscount) / 100);
                         promotionTotal = numberOfTimesApplied * actualPriceOfGroup;
                         
-                        nonDiscountedItemsTotal = (quantityInBasket % quantityOfPromotion) * item.Product.Price;
+                        nonDiscountedItemsTotal = (quantityInBasket % quantityOfPromotion) * product.Price;
                         
                         checkoutItemTotal = promotionTotal + nonDiscountedItemsTotal;
                         break;
                     default:
                         // No promotion on this item, or unhandled promotion type in which case ignore
                         quantityInBasket = item.Quantity;
-                        checkoutItemTotal = quantityInBasket * item.Product.Price;
+                        checkoutItemTotal = quantityInBasket * product.Price;
                         break;
                 }
 

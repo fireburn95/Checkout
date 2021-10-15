@@ -1,10 +1,8 @@
-using System;
-
 namespace CheckoutKata.Models
 {
     public class Product
     {
-        public string Sku { get; set; }
-        public decimal Price { get; set; }
+        public string Sku { get; init; }
+        public decimal Price { get; init; }
     }
 }

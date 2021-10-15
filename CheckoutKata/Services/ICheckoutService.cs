@@ -8,11 +8,11 @@ namespace CheckoutKata.Services
     {
         public List<CheckoutItem> GetCurrentBasket();
         
-        public void AddItem(Product product);
+        public void AddItem(string sku);
 
-        public void RemoveItem(Product product);
+        public void RemoveItem(string sku);
 
-        public void ClearProduct(Product product);
+        public void ClearProduct(string sku);
 
         public void ClearBasket();
 

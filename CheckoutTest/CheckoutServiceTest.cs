@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using CheckoutKata.Dtos;
@@ -21,7 +20,7 @@ namespace CheckoutTest
         public void TestAddProduct()
         {
             // Given
-            var product = new Product { Sku = "Cheese", Price = 40.0m };
+            const string product = "A";
             
             // When
             _checkoutService.AddItem(product);
@@ -35,7 +34,7 @@ namespace CheckoutTest
         public void TestRemoveProductCompletely()
         {
             // Given
-            var product = new Product { Sku = "Cheese", Price = 40.0m };
+            const string product = "A";
             _checkoutService.AddItem(product);
             var basket = _checkoutService.GetCurrentBasket();
             AssertSingleProductInBasket(product, basket);
@@ -52,12 +51,12 @@ namespace CheckoutTest
         public void TestRemoveProductQuantity()
         {
             // Given
-            var product = new Product { Sku = "Cheese", Price = 40.0m };
+            const string product = "A";
             _checkoutService.AddItem(product);
             _checkoutService.AddItem(product);
             var basket = _checkoutService.GetCurrentBasket();
             Assert.Single(basket);
-            Assert.Equal(product, basket[0].Product);
+            Assert.Equal(product, basket[0].Sku);
             Assert.Equal(2, basket[0].Quantity);
             
             // When
@@ -65,7 +64,7 @@ namespace CheckoutTest
             
             // Then
             Assert.Single(basket);
-            Assert.Equal(product, basket[0].Product);
+            Assert.Equal(product, basket[0].Sku);
             Assert.Equal(1, basket[0].Quantity);
         }
         
@@ -73,8 +72,8 @@ namespace CheckoutTest
         public void TestClearProducts()
         {
             // Given
-            var product1 = new Product{ Sku = "Cheese", Price = 40.0m };
-            var product2 = new Product{ Sku = "Chocolate", Price = 33.0m };
+            const string product1 = "A";
+            const string product2 = "B";
             
             // 3 x Product 1, 2 x Product 2
             _checkoutService.AddItem(product1);
@@ -84,8 +83,8 @@ namespace CheckoutTest
             _checkoutService.AddItem(product2);
 
             var totalQuantityBefore = _checkoutService.GetCurrentBasket().Select(item => item.Quantity).Sum();
-            var product1QuantityBefore = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product1)).ToList()[0].Quantity;
-            var product2QuantityBefore = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product2)).ToList()[0].Quantity;
+            var product1QuantityBefore = _checkoutService.GetCurrentBasket().Where(item => item.Sku.Equals(product1)).ToList()[0].Quantity;
+            var product2QuantityBefore = _checkoutService.GetCurrentBasket().Where(item => item.Sku.Equals(product2)).ToList()[0].Quantity;
             Assert.Equal(5, totalQuantityBefore);
             Assert.Equal(3, product1QuantityBefore);
             Assert.Equal(2, product2QuantityBefore);
@@ -95,8 +94,8 @@ namespace CheckoutTest
             
             // Then
             var totalQuantityAfter = _checkoutService.GetCurrentBasket().Select(item => item.Quantity).Sum();
-            var product1After = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product1)).ToList();
-            var product2QuantityAfter = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product2)).ToList()[0].Quantity;
+            var product1After = _checkoutService.GetCurrentBasket().Where(item => item.Sku.Equals(product1)).ToList();
+            var product2QuantityAfter = _checkoutService.GetCurrentBasket().Where(item => item.Sku.Equals(product2)).ToList()[0].Quantity;
             Assert.Equal(2, totalQuantityAfter);
             Assert.Empty(product1After);
             Assert.Equal(2, product2QuantityAfter);
@@ -106,8 +105,8 @@ namespace CheckoutTest
         public void TestClearBaskets()
         {
             // Given
-            var product1 = new Product{ Sku = "Cheese", Price = 40.0m };
-            var product2 = new Product{ Sku = "Chocolate", Price = 33.0m };
+            const string product1 = "A";
+            const string product2 = "B";
             
             // 1 x Product 1, 2 x Product 2
             _checkoutService.AddItem(product1);
@@ -115,8 +114,8 @@ namespace CheckoutTest
             _checkoutService.AddItem(product2);
             
             var totalQuantityBefore = _checkoutService.GetCurrentBasket().Select(item => item.Quantity).Sum();
-            var product1QuantityBefore = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product1)).ToList()[0].Quantity;
-            var product2QuantityBefore = _checkoutService.GetCurrentBasket().Where(item => item.Product.Equals(product2)).ToList()[0].Quantity;
+            var product1QuantityBefore = _checkoutService.GetCurrentBasket().Where(item => item.Sku.Equals(product1)).ToList()[0].Quantity;
+            var product2QuantityBefore = _checkoutService.GetCurrentBasket().Where(item => item.Sku.Equals(product2)).ToList()[0].Quantity;
             Assert.Equal(3, totalQuantityBefore);
             Assert.Equal(1, product1QuantityBefore);
             Assert.Equal(2, product2QuantityBefore);
@@ -132,14 +131,14 @@ namespace CheckoutTest
         public void TestCompleteOrder()
         {
             // Given
-            var product1 = new Product{ Sku = "Cheese", Price = 40.0m };
-            var product2 = new Product{ Sku = "Chocolate", Price = 33.0m };
-            var product3 = new Product{ Sku = "Chips", Price = 18.5m };
+            const string product1 = "A";
+            const string product2 = "B";
+            const string product3 = "C";
 
             // Create two Promotions
-            var buy2Prod1Get25Off = new BuyQuantityGetPercentOff() { Product = product1, PercentDiscount = 25.0f, PurchaseQuantity = 2 };
-            var buy2Prod2For55 = new BuyQuantityForPrice() { Product = product2, NewPrice = 55, PurchaseQuantity = 2 };
-            var promotions = new List<AbstractPromotion>() { buy2Prod1Get25Off, buy2Prod2For55 };
+            var buy2Prod1Get20Off = new BuyQuantityGetPercentOff() { ProductSku = product1, PercentDiscount = 20.0f, PurchaseQuantity = 2 };
+            var buy2Prod2For25 = new BuyQuantityForPrice() { ProductSku = product2, NewPrice = 25, PurchaseQuantity = 2 };
+            var promotions = new List<AbstractPromotion>() { buy2Prod1Get20Off, buy2Prod2For25 };
 
             // Add to checkout
             _checkoutService.AddItem(product1);
@@ -152,17 +151,17 @@ namespace CheckoutTest
             // When
             var totalPrice = _checkoutService.CompleteOrder(promotions);
 
-            // Calculate total (60 + 55 + 37)
-            Assert.Equal(152m, totalPrice);
+            // Calculate total (16 + 25 + 80)
+            Assert.Equal(121m, totalPrice);
         }
 
-        private static void AssertSingleProductInBasket(Product product, IReadOnlyList<CheckoutItem> basket)
+        private static void AssertSingleProductInBasket(string productSku, IReadOnlyList<CheckoutItem> basket)
         {
             // Basket has one product
             Assert.Single(basket);
             
             // The item is the product
-            Assert.Equal(product, basket[0].Product);
+            Assert.Equal(productSku, basket[0].Sku);
             
             // There is just one item
             Assert.Equal(1, basket[0].Quantity);

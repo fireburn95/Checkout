@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using CheckoutKata.Models;
 using CheckoutKata.Services;
@@ -19,7 +18,7 @@ namespace CheckoutTest
         public void TestOne()
         {
             // Given
-            var productA = new Product { Sku = "A", Price = 10.0m };
+            const string productA = "A";
             
             // When
             _checkoutService.AddItem(productA);
@@ -30,7 +29,7 @@ namespace CheckoutTest
             Assert.Single(basket);
             
             // The item is the product
-            Assert.Equal(productA, basket[0].Product);
+            Assert.Equal(productA, basket[0].Sku);
             
             // There is just one item
             Assert.Equal(1, basket[0].Quantity);
@@ -40,8 +39,8 @@ namespace CheckoutTest
         public void TestTwo()
         {
             // Given
-            var productA = new Product{ Sku = "A", Price = 10.0m };
-            var productB = new Product{ Sku = "B", Price = 15.0m };
+            const string productA = "A";
+            const string productB = "B";
 
             // Add to checkout
             _checkoutService.AddItem(productA);
@@ -60,10 +59,10 @@ namespace CheckoutTest
         public void TestThree()
         {
             // Given
-            var productB = new Product{ Sku = "B", Price = 15.0m };
+            const string productB = "B";
             
             // Create two Promotions
-            var buy3ProdBFor40 = new BuyQuantityForPrice() { Product = productB, PurchaseQuantity = 3, NewPrice = 40};
+            var buy3ProdBFor40 = new BuyQuantityForPrice() { ProductSku = productB, PurchaseQuantity = 3, NewPrice = 40};
 
             // Add 8 units to checkout
             _checkoutService.AddItem(productB);
@@ -86,10 +85,10 @@ namespace CheckoutTest
         public void TestFour()
         {
             // Given
-            var productD = new Product{ Sku = "D", Price = 55.0m };
+            const string productD = "D";
             
             // Create two Promotions
-            var buy2ProdDGet25Off = new BuyQuantityGetPercentOff() { Product = productD, PurchaseQuantity = 2, PercentDiscount = 25f};
+            var buy2ProdDGet25Off = new BuyQuantityGetPercentOff() { ProductSku = productD, PurchaseQuantity = 2, PercentDiscount = 25f};
 
             // Add 5 units to checkout
             _checkoutService.AddItem(productD);

@@ -2,7 +2,7 @@ namespace CheckoutKata.Models
 {
     public abstract class AbstractPromotion
     {
-        public Product Product { get; set; }
-        public int PurchaseQuantity { get; set; }
+        public string ProductSku { get; init; }
+        public int PurchaseQuantity { get; init; }
     }
 }
