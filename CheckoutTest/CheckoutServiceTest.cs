@@ -32,7 +32,7 @@ namespace CheckoutTest
         }
         
         [Fact]
-        public void TestRemoveProduct()
+        public void TestRemoveProductCompletely()
         {
             // Given
             var product = new Product { Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
@@ -48,7 +48,26 @@ namespace CheckoutTest
             Assert.Empty(_checkoutService.GetCurrentBasket());
         }
         
-        // todo test for remove product completely and quantity
+        [Fact]
+        public void TestRemoveProductQuantity()
+        {
+            // Given
+            var product = new Product { Id = Guid.NewGuid(), Name = "Cheese", Price = 40.0m };
+            _checkoutService.AddItem(product);
+            _checkoutService.AddItem(product);
+            var basket = _checkoutService.GetCurrentBasket();
+            Assert.Single(basket);
+            Assert.Equal(product, basket[0].Product);
+            Assert.Equal(2, basket[0].Quantity);
+            
+            // When
+            _checkoutService.RemoveItem(product);
+            
+            // Then
+            Assert.Single(basket);
+            Assert.Equal(product, basket[0].Product);
+            Assert.Equal(1, basket[0].Quantity);
+        }
         
         [Fact]
         public void TestClearProducts()
